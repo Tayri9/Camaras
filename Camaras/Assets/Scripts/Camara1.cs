@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Camara1 : MonoBehaviour
 {
-    [SerializeField] float speed = 1.0f;
+    [SerializeField] float speed = 5.0f;
     [SerializeField] bool moveFoward = true;
     [SerializeField] bool moveBackward = false;
     [SerializeField] bool general = true;
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.A))
         {
             if (general)
             {

@@ -6,7 +6,6 @@ public class Camara3 : MonoBehaviour
 {
     [SerializeField] float speed = 1.0f;
     [SerializeField] bool stop = false;
-    [SerializeField] bool general = true;
 
     void Update()
     {
