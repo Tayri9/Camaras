@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class Camara3 : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] float speed = 1.0f;
+    [SerializeField] bool stop = false;
+    [SerializeField] bool general = true;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (!stop)
+        {
+            transform.position -= transform.forward * Time.deltaTime * speed;
+            Camera.main.focalLength += 5f * Time.deltaTime * speed;
+        }    
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("General"))
+        {
+            stop = true;
+        }
     }
 }

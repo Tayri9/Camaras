@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Camara1 : MonoBehaviour
-{    
+{
+    [SerializeField] float speed = 1.0f;
+    [SerializeField] bool moveFoward = true;
+    [SerializeField] bool moveBackward = false;
     [SerializeField] bool general = true;
-    [SerializeField] bool limit = false;
-    [SerializeField] float speed = 0.2f;
-    [SerializeField] float fieldOfView = 70;
-    [SerializeField] float fieldOfViewGeneral = 70;
-    [SerializeField] float fieldOfViewTercera = 25;
-
-    void Start()
-    {
-        Camera.main.fieldOfView = fieldOfViewGeneral;
-        general = true;
-    }
 
     void Update()
     {
@@ -23,37 +15,40 @@ public class Camara1 : MonoBehaviour
         {
             if (general)
             {
-                fieldOfView = 25;
                 general = false;
-                limit = true;
+                moveBackward = true;
             }
             else
             {
-                fieldOfView = 70;
                 general = true;
-                limit = true;
+                moveFoward = true;
             }
         }
 
-        if (limit && general)
+        if (moveFoward && general)
         {
-            fieldOfView-=speed;
-            Camera.main.fieldOfView = fieldOfView;
-
-            if (fieldOfView <= fieldOfViewTercera)
-            {
-                limit = false;
-            }
+            transform.position += transform.forward * Time.deltaTime * speed;
         }
-        else if (limit && !general)
-        {
-            fieldOfView+=speed;
-            Camera.main.fieldOfView = fieldOfView;
 
-            if (fieldOfView >= fieldOfViewGeneral)
-            {
-                limit = false;
-            }
+        if (moveBackward && !general)
+        {
+            transform.position -= transform.forward * Time.deltaTime * speed;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("3Persona"))
+        {
+            moveFoward = false;
+            moveBackward = true;
+        }
+
+        if (other.CompareTag("General"))
+        {
+            moveFoward = true;
+            moveBackward = false;
+        }
+    }
+    
 }
