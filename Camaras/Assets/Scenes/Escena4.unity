@@ -9673,13 +9673,13 @@ MonoBehaviour:
   speedTrav: 5
   stopTrav: 0
   rotY: 135
-  speedRot: 100
+  speedRot: 50
   posIni: 90
   posFin: 155
-  canRotate: 0
+  canRotateRight: 0
+  canRotateLeft: 0
   stopVer: 0
   speedVer: 1
-  focalLength: 0
 --- !u!1001 &975431526
 PrefabInstance:
   m_ObjectHideFlags: 0

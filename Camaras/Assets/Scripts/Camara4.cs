@@ -10,19 +10,23 @@ public class Camara4 : MonoBehaviour
 
     [Header("Rotacion")]
     [SerializeField] float rotY = 135f;
-    [SerializeField] float speedRot = 100f;
+    [SerializeField] float speedRot = 50f;
     [SerializeField] float posIni = 90f;
     [SerializeField] float posFin = 155f;
-    [SerializeField] bool canRotate = false;
+    [SerializeField] bool canRotateRight = false;
+    [SerializeField] bool canRotateLeft = false;
 
     [Header("Vertigo")]
     [SerializeField] bool stopVer = false;
     [SerializeField] float speedVer = 1.0f;
-    [SerializeField] float focalLength;
+    [SerializeField] bool aumentarFocal = false;
+    [SerializeField] bool disminuirFocal = false;
+    [SerializeField] float maxFocal = 69;
+    [SerializeField] float minFocal = 43;
 
     void Start()
     {
-        
+        //43 69
     }
 
     void Update()
@@ -33,88 +37,68 @@ public class Camara4 : MonoBehaviour
             Camera.main.focalLength += 5f * Time.deltaTime * speedVer;
         }
 
-        if (canRotate)
+        if (disminuirFocal)
+        {
+            Camera.main.focalLength -= 5f * Time.deltaTime * speedVer;
+            if(Camera.main.focalLength <= minFocal)
+            {
+                disminuirFocal = false;
+                canRotateRight = true;                
+            }
+        }
+
+        if (canRotateRight)
         {
             Camera.main.transform.Rotate(0, 0.1f * Time.deltaTime * speedRot, 0);
 
             if (gameObject.transform.rotation.eulerAngles.y >= posFin)
             {
-                canRotate = false;
-                Camera.main.transform.rotation = Quaternion.Euler(0, rotY, 0);
-                stopTrav = false;
-                Camera.main.focalLength = focalLength;
+                canRotateRight = false;
+                canRotateLeft = true;
             }
         }
 
-        if (!stopTrav)
+        if (canRotateLeft)
         {
-            transform.position += transform.forward * Time.deltaTime * speedVer;
-            Camera.main.focalLength -= 5f * Time.deltaTime * speedVer;
-        }
-    }
+            Camera.main.transform.Rotate(0, -0.1f * Time.deltaTime * speedRot, 0);
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("General"))
-        {
-            stopVer = true;
-            focalLength = Camera.main.focalLength;
-            canRotate = true;
-            Camera.main.transform.rotation = Quaternion.Euler(0, posIni, 0);
-            Camera.main.focalLength = 24;
-        }
-
-        if (other.CompareTag("3Persona"))
-        {
-            stopTrav = true;
-        }
-    }
-
-    /*void Update()
-    {
-        if (!stopTrav)
-        {
-            transform.position -= transform.forward * Time.deltaTime * speedTrav;
-        }
-
-        if (canRotate)
-        {
-            Camera.main.transform.Rotate(0, 0.1f * Time.deltaTime * speedRot, 0);
-
-            if (gameObject.transform.rotation.eulerAngles.y >= posFin)
+            if (gameObject.transform.rotation.eulerAngles.y <= rotY)
             {
-                canRotate = false;
-                Camera.main.transform.rotation = Quaternion.Euler(0, rotY, 0);
-                stopVer = false;
+                canRotateLeft = false;
+                aumentarFocal = true;
             }
         }
 
-        if (!stopVer)
+        if (aumentarFocal)
         {
-            transform.position += transform.forward * Time.deltaTime * speedVer;
-            Camera.main.focalLength -= 5f * Time.deltaTime * speedVer;
-        }
-
-        if (!stopVer2)
-        {
-            transform.position -= transform.forward * Time.deltaTime * speedVer;
             Camera.main.focalLength += 5f * Time.deltaTime * speedVer;
+            if (Camera.main.focalLength >= maxFocal)
+            {
+                aumentarFocal = false;
+                stopTrav = false;
+            }
+        }
+
+        if (!stopTrav)
+        {
+            transform.position += transform.forward * Time.deltaTime * speedVer;
+            Camera.main.focalLength -= 5f * Time.deltaTime * speedVer;
         }
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("General"))
         {
-            stopTrav = true;
-            canRotate = true;
-            Camera.main.transform.rotation = Quaternion.Euler(0, posIni, 0);
-            stopVer2 = true;
+            stopVer = true;
+            disminuirFocal = true;
         }
 
         if (other.CompareTag("3Persona"))
         {
-            stopVer = true;
-            stopVer2 = false;
+            stopTrav = true;
         }
-    }*/
+    }
+
+    
 }
